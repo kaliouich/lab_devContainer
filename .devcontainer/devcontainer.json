@@ -1,0 +1,49 @@
+{
+    "name": "Docker Environment for Python 3.12 Development",
+    "dockerFile": "Dockerfile.devEnv",
+
+    "build": {
+        "args": {
+            "USER_GID": "1000",
+            "USER_UID": "1000",
+            "USERNAME": "${localEnv:USER}"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "hashicorp.terraform",
+                "ms-kubernetes-tools.azure-aks-tools",
+                "ms-azuretools.vscode-docker",
+                "redhat.vscode-yaml"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash (login)"
+            }
+        }
+    },
+
+    "remoteUser": "${localEnv:USER}",
+
+    "runArgs": [
+        "--privileged=true",
+        "--cap-add=SYS_ADMIN",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt",
+        "seccomp=unconfined"
+    ],
+
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+        "source=${localEnv:HOME}/.bashrc,target=${localEnv:HOME}/.bashrc,type=bind",
+        "source=${localEnv:HOME}/.gitconfig,target=${localEnv:HOME}/.gitconfig,type=bind",
+        "source=${localEnv:HOME}/.ssh,target=${localEnv:HOME}/.ssh,type=bind",
+        "source=${localEnv:HOME}/cache,target=/cache,type=bind"
+    ],
+
+    "initializeCommand": "mkdir -p ${localEnv:HOME}/cache && touch ${localEnv:HOME}/.bashrc && touch ${localEnv:HOME}/.gitconfig && mkdir -p ${localEnv:HOME}/.ssh",
+
+    // Removed postStartCommand related to Kafka
+    "postStartCommand": "sudo mkdir -p /cache && sudo chmod 777 /cache"
+}

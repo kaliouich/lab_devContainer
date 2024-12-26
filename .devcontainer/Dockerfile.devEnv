@@ -1,0 +1,66 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+        apt-transport-https \
+        curl \
+        git \
+        gnupg \
+        groff \
+        less \
+        python3 \
+        python3-pip \
+        python3-venv \
+        sudo \
+        unzip \
+        wget \
+        ca-certificates \
+        jq \
+        && rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI
+RUN pip3 install --upgrade pip && \
+    pip3 install awscli
+
+# Install Terraform
+RUN wget -q https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip && \
+    unzip terraform_1.6.0_linux_amd64.zip -d /usr/local/bin/ && \
+    chmod +x /usr/local/bin/terraform && \
+    rm terraform_1.6.0_linux_amd64.zip
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/ && \
+    rm kubectl
+
+# Install Helm
+RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+# Install Docker
+RUN apt-get update && \
+    apt-get install -y \
+        docker.io \
+        && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user (optional, can be adjusted as per your needs)
+ARG USERNAME=developer
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+RUN if [ $USERNAME != root ]; then \
+        groupadd --gid $USER_GID $USERNAME && \
+        useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+        echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
+        chmod 0440 /etc/sudoers.d/$USERNAME; \
+    fi
+
+# Clean up unnecessary files and caches
+RUN apt-get clean && apt-get autoremove -y
+
+# Switch to the non-root user (optional)
+USER $USERNAME
+
+# Set up a working directory
+WORKDIR /home/$USERNAME
