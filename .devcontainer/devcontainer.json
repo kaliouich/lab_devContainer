@@ -14,7 +14,6 @@
             "extensions": [
                 "ms-python.python",
                 "hashicorp.terraform",
-                "ms-kubernetes-tools.azure-aks-tools",
                 "ms-azuretools.vscode-docker",
                 "redhat.vscode-yaml"
             ],
@@ -45,5 +44,7 @@
     "initializeCommand": "mkdir -p ${localEnv:HOME}/cache && touch ${localEnv:HOME}/.bashrc && touch ${localEnv:HOME}/.gitconfig && mkdir -p ${localEnv:HOME}/.ssh",
 
     // Removed postStartCommand related to Kafka
-    "postStartCommand": "sudo mkdir -p /cache && sudo chmod 777 /cache"
+    "postStartCommand": "sudo mkdir -p /cache && sudo chmod 777 /cache",
+
+    "postCreateCommand": "bash"
 }
