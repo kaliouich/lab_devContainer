@@ -1,5 +1,5 @@
 {
-    "name": "Docker Environment for Python 3.12 Development",
+    "name": "Docker Environment for Terrafrom and Aws",
     "dockerFile": "Dockerfile.devEnv",
 
     "build": {
