@@ -45,9 +45,7 @@ ENV PYTHONPATH="/usr/local/lib/python3.12/dist-packages:/usr/lib/python3.12/dist
 RUN pip3 install --no-cache-dir \
     git-remote-codecommit \
     jinja2 \
-    flask \
-    flask-login \
-    flask-wtf
+    flask
 
 # Install Terraform
 RUN wget -q https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip && \
