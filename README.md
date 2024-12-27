@@ -17,3 +17,5 @@ I took the time to configure my **DevContainer** to install all the necessary pa
 ---
 
 By switching to DevContainer, I've significantly improved the reliability of my development setup and streamlined my workflow.
+
+Ps: this work was based on https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/.devcontainer
